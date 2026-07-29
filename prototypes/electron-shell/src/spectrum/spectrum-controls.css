@@ -1,0 +1,188 @@
+.spectrum-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.spectrum-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.spectrum-row-main {
+  flex-wrap: nowrap;
+}
+
+.spectrum-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  color: #e8edf5;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.spectrum-toggle input {
+  accent-color: #3d6aad;
+}
+
+.spectrum-select {
+  background: #0a0d12;
+  border: 1px solid #2a3340;
+  color: #d5dae2;
+  border-radius: 6px;
+  padding: 0.28rem 0.4rem;
+  font-size: 0.7rem;
+  min-width: 0;
+}
+
+.spectrum-select:disabled {
+  opacity: 0.45;
+}
+
+.spectrum-grow {
+  flex: 1 1 0;
+  width: 0;
+}
+
+.spectrum-source {
+  flex: 0 0 auto;
+  max-width: 5.8rem;
+}
+
+.spectrum-opacity-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 100%;
+  font-size: 0.68rem;
+  color: #8b95a5;
+}
+
+.spectrum-opacity-row input[type='range'] {
+  width: 100%;
+  margin: 0;
+}
+
+.spectrum-opacity-row.is-disabled,
+.spectrum-device-row.is-disabled,
+.spectrum-monitor.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.spectrum-device-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.spectrum-device-label {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 0.28rem 0.45rem;
+  border: 1px solid #2a3340;
+  border-radius: 6px;
+  background: #0a0d12;
+  color: #9aa4b2;
+  font-size: 0.7rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spectrum-channel-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.spectrum-channel-toggle {
+  width: 1.65rem;
+  height: 100%;
+  min-height: 1.65rem;
+  border: 1px solid #2a3340;
+  background: #151a22;
+  color: #9aa4b2;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.spectrum-channel-toggle:hover:not(:disabled) {
+  border-color: #4a6284;
+  color: #d5dae2;
+}
+
+.spectrum-channel-toggle:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.spectrum-channel-list {
+  position: absolute;
+  top: calc(100% + 0.3rem);
+  right: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  min-width: 8.5rem;
+  max-height: 12rem;
+  overflow: auto;
+  padding: 0.3rem;
+  border: 1px solid #2a3340;
+  border-radius: 8px;
+  background: #151a22;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.45);
+}
+
+.spectrum-channel-list button {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: #9aa4b2;
+  border-radius: 5px;
+  padding: 0.32rem 0.45rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.spectrum-channel-list button:hover {
+  background: rgba(61, 106, 173, 0.18);
+  color: #e8ecf2;
+}
+
+.spectrum-channel-list button.on {
+  color: #9ec1ff;
+  font-weight: 600;
+}
+
+.spectrum-monitor {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  color: #c5d0de;
+  cursor: pointer;
+}
+
+.spectrum-countdown {
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  color: #f0b070;
+  font-weight: 600;
+}
+
+.spectrum-countdown-hint {
+  font-style: normal;
+  color: #6b7788;
+  font-weight: 400;
+}
