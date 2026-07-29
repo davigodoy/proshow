@@ -1,0 +1,223 @@
+.bible-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.bible-row {
+  display: flex;
+  gap: 0.45rem;
+  align-items: end;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.bible-row label {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  color: #8b95a5;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.bible-row select,
+.bible-row input {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  font: inherit;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #e8ecf2;
+  background: #0a0d12;
+  border: 1px solid #2a3340;
+  border-radius: 8px;
+  padding: 0.4rem 0.5rem;
+}
+
+/* Cap. e campos numéricos mais estreitos */
+.bible-row > label:nth-child(2) {
+  flex: 0 1 4.5rem;
+  max-width: 5.5rem;
+}
+
+.bible-row > label:has(input[type='number']) {
+  flex: 0 1 4.5rem;
+  max-width: 5.5rem;
+}
+
+.bible-hint {
+  margin: 0 0 0.25rem;
+  font-size: 0.78rem;
+  color: #7d8796;
+}
+
+.bible-row .primary {
+  flex-shrink: 0;
+  background: #2a4a7a;
+  border: 1px solid #3d6aad;
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.bible-row .ghost {
+  flex-shrink: 0;
+  background: #151a22;
+  border: 1px solid #2a3340;
+  color: #d5dae2;
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.bible-verses {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+}
+
+.bible-verses button {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  text-align: left;
+  border: 1px solid #2a3340;
+  background: #151a22;
+  color: #d5dae2;
+  border-radius: 8px;
+  padding: 0.4rem 0.55rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.bible-verses button.on {
+  border-color: #4a6fa0;
+  background: #1c2838;
+}
+
+.bible-verses strong {
+  color: #9ec1ff;
+  margin-right: 0.35rem;
+}
+
+.bible-dbl-hint {
+  align-self: center;
+  margin: 0;
+  white-space: nowrap;
+  font-size: 0.68rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #6b7380;
+}
+
+.bible-jump-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15%;
+  background: rgb(6 8 12 / 0.6);
+}
+
+.bible-jump-box {
+  width: min(20rem, 90%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.85rem;
+  border: 1px solid #2f3d4f;
+  border-radius: 10px;
+  background: #10151d;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.5);
+}
+
+.bible-jump-box label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  color: #8b95a5;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.bible-jump-box input,
+.bible-jump-box select {
+  box-sizing: border-box;
+  width: 100%;
+  font: inherit;
+  font-size: 0.95rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #e8ecf2;
+  background: #0a0d12;
+  border: 1px solid #3d6aad;
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+}
+
+.bible-jump-box select:disabled {
+  opacity: 0.6;
+}
+
+.bible-jump-matches {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  max-height: 9rem;
+  overflow: auto;
+}
+
+.bible-jump-matches li {
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: #9aa4b2;
+}
+
+.bible-jump-matches li.top {
+  background: rgb(74 111 160 / 0.22);
+  color: #d6e4fb;
+  font-weight: 600;
+}
+
+.bible-jump-matches li.empty {
+  color: #6b7380;
+  font-style: italic;
+}
+
+.bible-jump-hint {
+  margin: 0;
+  font-size: 0.68rem;
+  color: #6b7380;
+}

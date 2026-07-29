@@ -1,0 +1,91 @@
+# =============================================================================
+# worship-projection / ProShow — .gitignore
+# Mantém o clone limpo e seguro para publicação open-source.
+# =============================================================================
+
+# --- Dependencies & build ---
+node_modules/
+dist/
+dist-ssr/
+out/
+release/
+*.asar
+*.tsbuildinfo
+.vite/
+.turbo/
+coverage/
+
+# --- Env / secrets / máquina local ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+**/secrets/**
+
+# --- Runtime do app (normalmente em ~/ible-projection) ---
+operator-prefs.json
+output-safe-area.json
+bible-safe-area.json
+
+# --- Dados de culto / import (não publicar) ---
+**/data/holyrics-songs.json
+**/data/songs*.json
+**/library/
+**/media/
+
+# JSON soltos em data/ (dumps); temas bundled permanecem versionados
+**/data/*.json
+!**/data/themes/
+!**/data/themes/**
+
+# Textos bíblicos (.json): copyright — desenvolver com cópia local
+**/data/bible/*.json
+
+# --- Deploy / rede da igreja (hosts e IPs reais) ---
+**/deploy-igreja.sh
+**/deploy.local.sh
+**/deploy.*.local.sh
+**/*igreja*.local.*
+
+# --- Empacotamento gerado (DMG/EXE etc.; o .app launcher fino pode ficar) ---
+*.dmg
+*.pkg
+*.exe
+*.AppImage
+*.msi
+*.snap
+
+# --- macOS / editores ---
+.DS_Store
+.AppleDouble
+.LSOverride
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.sw?
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*~
+
+# --- Logs ---
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- Misc ---
+*.local
+.cache/
+tmp/
+temp/
+
+# --- Notas / regras locais de DEV (nunca no GitHub, nem no sync público) ---
+notes/
+.cursor/
