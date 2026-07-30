@@ -1,0 +1,535 @@
+.theme-editor {
+  min-height: 0;
+}
+
+.theme-editor-controls-only {
+  display: block;
+}
+
+.theme-editor-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.theme-editor-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  color: #8b95a5;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.theme-edit-target-hint {
+  margin: 0 0 0.15rem;
+  font-size: 0.8rem;
+  color: #c5ccd8;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.theme-edit-target-hint strong {
+  color: #e8ecf2;
+}
+
+.theme-edit-target-hint span {
+  color: #7d8796;
+  font-size: 0.72rem;
+}
+
+.theme-studio-preview {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.theme-studio-preview.is-active,
+.theme-studio-preview.mode-rotate:active {
+  cursor: grabbing;
+}
+
+.theme-studio-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Limite externo único: o tema recorta dentro dele, nunca para fora. */
+.theme-studio-out-bounds {
+  position: absolute;
+  z-index: 6;
+  top: var(--out-top, 0%);
+  right: var(--out-right, 0%);
+  bottom: var(--out-bottom, 0%);
+  left: var(--out-left, 0%);
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 176, 102, 0.55);
+  pointer-events: none;
+}
+
+.theme-studio-out-label {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 176, 102, 0.85);
+}
+
+.theme-studio-safe {
+  position: absolute;
+  z-index: 7;
+  top: var(--safe-top, 6%);
+  right: var(--safe-right, 6%);
+  bottom: var(--safe-bottom, 6%);
+  left: var(--safe-left, 6%);
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  box-sizing: border-box;
+  border: 1px dashed rgba(158, 193, 255, 0.55);
+  background: rgba(20, 40, 70, 0.04);
+  /* Sem box-shadow full-bleed: o título fora da área precisa permanecer legível */
+  pointer-events: none;
+}
+
+.theme-studio-preview > .fitted-theme-copy {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 6;
+}
+
+.theme-studio-safe.is-dragging {
+  border-color: rgba(158, 193, 255, 0.9);
+  background: rgba(40, 80, 130, 0.12);
+}
+
+.theme-studio-safe-label {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.45rem;
+  font-size: 0.58rem;
+  font-family: "Avenir Next", system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(190, 210, 240, 0.75);
+  pointer-events: none;
+}
+
+.theme-studio-safe-handle {
+  position: absolute;
+  z-index: 5;
+  pointer-events: auto;
+  border: none;
+  padding: 0;
+  background: rgba(158, 193, 255, 0.85);
+  box-shadow: 0 0 0 1px rgba(10, 16, 28, 0.5);
+  cursor: ns-resize;
+}
+
+.theme-studio-safe-handle.n,
+.theme-studio-safe-handle.s {
+  left: 20%;
+  right: 20%;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.theme-studio-safe-handle.n {
+  top: -2px;
+  cursor: ns-resize;
+}
+
+.theme-studio-safe-handle.s {
+  bottom: -2px;
+  cursor: ns-resize;
+}
+
+.theme-studio-safe-handle.e,
+.theme-studio-safe-handle.w {
+  top: 20%;
+  bottom: 20%;
+  width: 4px;
+  border-radius: 2px;
+  cursor: ew-resize;
+}
+
+.theme-studio-safe-handle.e {
+  right: -2px;
+}
+
+.theme-studio-safe-handle.w {
+  left: -2px;
+}
+
+.theme-studio-safe-handle:hover,
+.theme-studio-safe-handle:focus-visible {
+  background: #c5dbff;
+}
+
+.theme-studio-safe-readout {
+  position: absolute;
+  left: 0.4rem;
+  bottom: 0.35rem;
+  z-index: 6;
+  display: flex;
+  gap: 0.45rem;
+  font-size: 0.6rem;
+  font-family: "Avenir Next", system-ui, sans-serif;
+  color: rgba(200, 215, 235, 0.8);
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.theme-studio-zone-tag {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.35rem;
+  font-size: 0.58rem;
+  font-family: "Avenir Next", system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: transparent;
+  background: transparent;
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.fitted-theme-title-wrap:hover .theme-studio-zone-tag,
+.fitted-theme-phrase:hover .theme-studio-zone-tag,
+.fitted-theme-title-wrap.is-selected .theme-studio-zone-tag,
+.fitted-theme-phrase.is-selected .theme-studio-zone-tag,
+.fitted-theme-title-float:hover .theme-studio-zone-tag,
+.fitted-theme-phrase-float:hover .theme-studio-zone-tag,
+.fitted-theme-title-float.is-selected .theme-studio-zone-tag,
+.fitted-theme-phrase-float.is-selected .theme-studio-zone-tag {
+  color: #d7e6f8;
+  background: rgba(20, 28, 40, 0.85);
+}
+
+.theme-studio-preview .theme-canvas-guides {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.theme-editor-controls select,
+.theme-editor-controls input[type='range'],
+.theme-editor-controls input[type='color'] {
+  font: inherit;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #e8ecf2;
+  background: #0a0d12;
+  border: 1px solid #2a3340;
+  border-radius: 8px;
+  padding: 0.45rem 0.55rem;
+}
+
+.theme-rotate-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.45rem;
+  align-items: end;
+}
+
+.theme-rotate-row label {
+  min-width: 0;
+}
+
+.theme-rotate-reset {
+  align-self: end;
+  min-width: 2.6rem;
+  padding: 0.4rem 0.55rem;
+}
+
+.theme-bg-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.theme-bg-path {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #c5ccd8;
+  text-transform: none;
+  letter-spacing: 0;
+  word-break: break-all;
+}
+
+.theme-bg-path.muted {
+  color: #7d8796;
+}
+
+.theme-show-fields,
+.theme-type-block {
+  margin: 0.15rem 0 0;
+  padding: 0.55rem 0.65rem 0.65rem;
+  border: 1px solid #2a3340;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.theme-show-fields legend,
+.theme-type-block legend {
+  padding: 0 0.25rem;
+  font-size: 0.72rem;
+  color: #8b95a5;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/*
+ * Tamanho + Preencher + Quebra de linha são uma decisão só, então ganham
+ * bordas no eixo Y para se lerem como um bloco. Sem caixa fechada: só topo e
+ * base, que separam sem pesar na coluna de ajustes.
+ * Borda de um lado só não leva canto arredondado.
+ */
+.theme-size-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0.35rem 0;
+  padding: 0.7rem 0;
+  border-top: 1px solid #2a3340;
+  border-bottom: 1px solid #2a3340;
+  border-radius: 0;
+}
+
+.theme-size-group-title {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8b95a5;
+}
+
+.theme-size-hint {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: #8b95a5;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.theme-check {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.5rem !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 0.88rem !important;
+  color: #d5dae2 !important;
+  cursor: pointer;
+}
+
+.theme-check input {
+  /* switch global em ui-controls.css */
+}
+
+.theme-bg-inline {
+  cursor: default;
+}
+
+.theme-bg-inline span {
+  flex: 1;
+}
+
+.theme-bg-inline-btn {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid #2a3340;
+  background: #151a22;
+  color: #9aa4b2;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.theme-bg-inline-btn:hover:not(:disabled) {
+  border-color: #4a6284;
+  color: #d5dae2;
+}
+
+.theme-bg-inline-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.theme-canvas-drag {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  cursor: grab;
+  background: transparent;
+  touch-action: none;
+}
+
+.theme-canvas-drag.mode-rotate {
+  cursor: grab;
+}
+
+.theme-canvas-drag:active,
+.theme-canvas-drag.is-active {
+  cursor: grabbing;
+}
+
+.theme-canvas-guides {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  transition: opacity 0.15s ease;
+}
+
+.theme-canvas-drag.is-active .theme-canvas-guides,
+.theme-canvas-drag.mode-rotate .theme-canvas-guides,
+.theme-studio-preview.is-active .theme-canvas-guides,
+.theme-studio-preview.mode-rotate .theme-canvas-guides {
+  opacity: 0.85;
+}
+
+.guide-line {
+  position: absolute;
+  background: rgba(158, 193, 255, 0.55);
+  pointer-events: none;
+}
+
+.guide-line.guide-h {
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+
+.guide-line.guide-v {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+
+.guide-line.guide-center.guide-h {
+  top: 50%;
+  background: rgba(158, 193, 255, 0.75);
+}
+
+.guide-line.guide-center.guide-v {
+  left: 50%;
+  background: rgba(158, 193, 255, 0.75);
+}
+
+.guide-line.guide-third-a.guide-h {
+  top: 33.333%;
+  opacity: 0.55;
+}
+
+.guide-line.guide-third-b.guide-h {
+  top: 66.666%;
+  opacity: 0.55;
+}
+
+.guide-line.guide-third-a.guide-v {
+  left: 33.333%;
+  opacity: 0.55;
+}
+
+.guide-line.guide-third-b.guide-v {
+  left: 66.666%;
+  opacity: 0.55;
+}
+
+.guide-rotate-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(62%, 220px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border: 1px dashed rgba(158, 193, 255, 0.55);
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.guide-rotate-arm {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(31%, 110px);
+  height: 2px;
+  margin-top: -1px;
+  background: #9ec1ff;
+  transform-origin: left center;
+  border-radius: 1px;
+  box-shadow: 0 0 6px rgba(158, 193, 255, 0.45);
+}
+
+.guide-rotate-snap {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(34%, 120px);
+  height: 1px;
+  margin-top: -0.5px;
+  background: rgba(158, 193, 255, 0.28);
+  transform-origin: left center;
+}
+
+.guide-snap-0 {
+  transform: rotate(0deg);
+}
+
+.guide-snap-45 {
+  transform: rotate(45deg);
+}
+
+.guide-snap-90 {
+  transform: rotate(90deg);
+}
+
+.guide-snap-135 {
+  transform: rotate(135deg);
+}
+
+.theme-canvas-angle-hud {
+  position: absolute;
+  left: 50%;
+  top: 12%;
+  transform: translateX(-50%);
+  z-index: 2;
+  pointer-events: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #e8ecf2;
+  background: rgba(10, 13, 18, 0.72);
+  border: 1px solid #3a4658;
+  border-radius: 6px;
+  padding: 0.2rem 0.55rem;
+  font-family: "Avenir Next", system-ui, sans-serif;
+}

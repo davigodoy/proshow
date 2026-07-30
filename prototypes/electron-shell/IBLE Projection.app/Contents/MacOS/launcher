@@ -1,0 +1,24 @@
+#!/bin/bash
+# Prefer ~/ible-projection (instalação da igreja); senão a pasta do projeto.
+if [[ -x "$HOME/ible-projection/start-ible.sh" ]]; then
+  ROOT="$HOME/ible-projection"
+else
+  ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+fi
+
+# Precisa abrir pelo Terminal: sem assinatura estável, a permissão de
+# câmera/microfone do Electron é herdada do processo responsável (Terminal),
+# não do app em si — abrir direto (Finder/osascript "Electron") nunca pede
+# nem concede a permissão. Roda em background (nohup+disown) e fecha a
+# janela do Terminal logo depois; o app continua rodando normalmente.
+osascript <<EOF
+tell application "Terminal"
+  activate
+  set launchTab to do script "export PATH=\"\$HOME/.local/node/bin:/opt/homebrew/bin:/usr/local/bin:\$PATH\"; cd $(printf %q "$ROOT") && nohup ./start-ible.sh > $(printf %q "$ROOT/.launch.log") 2>&1 & disown; sleep 1; exit"
+  delay 2
+  try
+    set targetWindow to first window whose tabs contains launchTab
+    close targetWindow
+  end try
+end tell
+EOF

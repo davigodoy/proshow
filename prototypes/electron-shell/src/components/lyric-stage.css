@@ -1,0 +1,1063 @@
+.lyric-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  background: var(--theme-bg, #000);
+  color: var(--theme-lyric-color, #fff);
+  font-family: var(--theme-phrase-font, var(--theme-font, system-ui, sans-serif));
+}
+
+.lyric-stage-program {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  transition: opacity var(--theme-fade-ms, 400ms) ease;
+}
+
+.lyric-stage-program.is-off {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Fade entre tipos (letra / bíblia / mídia / câmera) — via preto */
+.lyric-stage-family-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lyric-stage-family-veil.is-running {
+  animation: lyric-family-fade var(--family-fade-ms, 400ms) ease both;
+}
+
+@keyframes lyric-family-fade {
+  0% {
+    opacity: 1;
+  }
+  42% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.lyric-stage-content {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  transition: opacity var(--theme-fade-ms, 400ms) ease;
+  z-index: 2;
+}
+
+/*
+ * Área do texto (margens Show/Bíblia ou pad do tema).
+ * Com título: ele é a âncora (posição estável); a letra ocupa o espaço restante.
+ */
+.lyric-stage-phrase-area,
+.lyric-fit-clip {
+  position: absolute;
+  top: var(--theme-pad-y, 8vh);
+  right: var(--theme-pad-x, 8vw);
+  bottom: var(--theme-pad-y, 8vh);
+  left: var(--theme-pad-x, 8vw);
+  box-sizing: border-box;
+}
+
+.lyric-stage-phrase-area {
+  z-index: 2;
+  overflow: visible;
+}
+
+/* Limite de fit/nudge (sem transform) — margens da tela */
+.lyric-fit-clip {
+  pointer-events: none;
+  visibility: hidden;
+  z-index: 0;
+}
+
+.lyric-stage.has-safe .lyric-stage-phrase-area,
+.lyric-stage.has-safe .lyric-fit-clip {
+  top: var(--safe-top, 0%);
+  right: var(--safe-right, 0%);
+  bottom: var(--safe-bottom, 0%);
+  left: var(--safe-left, 0%);
+}
+
+/*
+ * CRIATIVO usa a área liberada pela SAÍDA, não a caixa de texto do tema.
+ * O tema define onde o texto normal se comporta; o Criativo é modo gráfico e
+ * o único limite legítimo é o da projeção física. Vale para a frase única e
+ * para o mosaico do Max — os dois na mesma base, senão cada modo compõe
+ * contra um retângulo diferente.
+ *
+ * Vem depois da regra .has-safe de propósito: mesma especificidade, e a
+ * ordem é que decide.
+ */
+.lyric-stage.is-artistic.has-safe .lyric-stage-phrase-area,
+.lyric-stage.is-artistic.has-safe .lyric-fit-clip {
+  top: var(--out-top, 0%);
+  right: var(--out-right, 0%);
+  bottom: var(--out-bottom, 0%);
+  left: var(--out-left, 0%);
+}
+
+.lyric-stage.has-slots:not(.has-safe) .lyric-stage-phrase-area,
+.lyric-stage.has-slots:not(.has-safe) .lyric-fit-clip {
+  top: 3.5vh;
+  right: 6vw;
+  bottom: 3.5vh;
+  left: 6vw;
+}
+
+/* Título e letra: posições independentes (left/top % da área) */
+.lyric-stage-anchor {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  text-align: var(--theme-align, center);
+  box-sizing: border-box;
+}
+
+/*
+ * Título/referência: posicionado na área liberada pela SAÍDA, não na caixa de
+ * texto do tema. A caixa do tema delimita a letra; o título é livre dentro do
+ * limite físico da projeção — mesma referência que o editor de tema usa, para
+ * o mesmo número render a mesma posição nos dois lugares.
+ */
+.lyric-stage-title-area {
+  position: absolute;
+  top: var(--out-top, 0%);
+  right: var(--out-right, 0%);
+  bottom: var(--out-bottom, 0%);
+  left: var(--out-left, 0%);
+  z-index: 12;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.lyric-stage-title-cell {
+  position: absolute;
+  left: calc(50% + var(--theme-title-x, 0%));
+  top: calc(50% + var(--theme-title-y, 0%));
+  transform: translate(-50%, -50%) rotate(var(--theme-title-rotate, 0deg));
+  transform-origin: center center;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: inherit;
+  pointer-events: none;
+  min-width: 0;
+  max-width: 94%;
+  width: max-content;
+}
+
+.lyric-stage-lyrics-cell {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.lyric-stage-phrase-area .lyric-stage-copy,
+.lyric-stage-phrase-area .lyric-stage-slots {
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Offset residual do fit + rotação só na letra */
+.lyric-stage-lyrics-cell .lyric-stage-copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% + var(--theme-phrase-y, 0%));
+  bottom: auto;
+  transform: translateY(-50%)
+    translate(var(--theme-fit-nx, 0px), var(--theme-fit-ny, 0px))
+    rotate(var(--theme-rotate, 0deg));
+  transform-origin: center center;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  padding: 0;
+}
+
+.lyric-stage-lyrics-cell .lyric-slide-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% + var(--theme-phrase-y, 0%));
+  bottom: auto;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.lyric-stage-lyrics-cell .lyric-stage-slots {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.lyric-stage-title-cell .lyric-stage-title,
+.lyric-stage-title-cell .lyric-stage-artist {
+  margin-bottom: 0.1em;
+  margin-top: 0;
+}
+
+.lyric-stage-content.is-off {
+  opacity: 0;
+}
+
+.lyric-stage-badge {
+  position: absolute;
+  top: 0.55rem;
+  left: 0.55rem;
+  z-index: 3;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: #9ec1ff;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid #2a3340;
+  border-radius: 6px;
+  padding: 0.2rem 0.45rem;
+  font-family: "Avenir Next", system-ui, sans-serif;
+}
+
+.lyric-stage-media-player {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.lyric-stage-camera,
+.lyric-stage-media,
+.lyric-stage-empty-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.lyric-stage-camera {
+  z-index: 1;
+  background: #000;
+}
+
+.lyric-stage-camera.is-program-camera {
+  /* Câmera principal fica à frente de máscaras/overlays do tema. */
+  z-index: 3;
+}
+
+.lyric-stage-camera-caption {
+  position: absolute;
+  left: 4%;
+  bottom: 5%;
+  z-index: 4;
+  max-width: 70%;
+  box-sizing: border-box;
+  padding: 0.28em 0.55em 0.34em;
+  border-radius: 0.28em;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.68) 0%,
+    rgba(0, 0, 0, 0.42) 82%,
+    rgba(0, 0, 0, 0.08) 100%
+  );
+  color: #fff;
+  font-family: "Avenir Next", system-ui, sans-serif;
+  font-size: clamp(1rem, 2.1vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.15;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+
+.lyric-stage.is-contained .lyric-stage-camera-caption {
+  font-size: clamp(0.7rem, 3.2cqw, 1.3rem);
+}
+
+.lyric-stage-deck-crop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  object-fit: unset;
+}
+
+.lyric-stage-media {
+  object-fit: contain;
+  background: #000;
+}
+
+/* Frame capturado da navegação: mesmo quadro, sem letterbox. */
+.lyric-stage-media.is-nav-capture {
+  object-fit: fill;
+}
+
+.lyric-stage-web-embed {
+  border: 0;
+  object-fit: unset;
+  pointer-events: auto;
+}
+
+.lyric-stage-web-embed.is-mirror {
+  pointer-events: none;
+}
+
+.lyric-stage-theme-bg {
+  object-fit: cover;
+  z-index: 0;
+}
+
+.lyric-stage-empty-bg {
+  background: var(--theme-bg, #000);
+}
+
+.lyric-stage-deck {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #0a0d12;
+  color: #9aa3b2;
+  font-family: "Avenir Next", system-ui, sans-serif;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.lyric-stage-deck strong {
+  color: #e8ecf2;
+  font-size: 1.2rem;
+}
+
+.lyric-stage-copy {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: var(--theme-justify, center);
+  align-items: center;
+  text-align: var(--theme-align, center);
+  padding: 0;
+  font-weight: var(--theme-weight, 650);
+  letter-spacing: var(--theme-tracking, 0.02em);
+  line-height: var(--theme-leading, 1.2);
+  transform: translate(var(--theme-fit-nx, 0px), var(--theme-fit-ny, 0px))
+    rotate(var(--theme-rotate, 0deg));
+  transform-origin: center center;
+}
+
+.lyric-stage-copy.is-rotated {
+  z-index: 4;
+  overflow: visible;
+}
+
+.lyric-stage-copy > .lyric-stage-stack,
+.lyric-stage-copy > div {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+  text-align: inherit;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Pilha só da letra (título fica no title-rail) */
+.lyric-stage-stack {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: inherit;
+  align-items: inherit;
+  text-align: inherit;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.lyric-stage-lines-viewport {
+  position: relative;
+  z-index: 1;
+  flex: 0 1 auto;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+  text-align: inherit;
+}
+
+.lyric-stage-copy.on-camera {
+  /* sem overlay escuro — letra limpa sobre a câmera */
+  background: transparent;
+}
+
+.lyric-stage-title {
+  font-family: var(--theme-title-font, var(--theme-font));
+  font-size: var(--theme-title-size, 1.2vw);
+  color: var(--theme-title-color, #fff);
+  opacity: var(--theme-title-opacity, 0.45);
+  margin-bottom: 0.35em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.lyric-stage-artist {
+  font-family: var(--theme-title-font, var(--theme-font));
+  font-size: calc(var(--theme-title-size, 1.6vw) * 0.85);
+  color: var(--theme-title-color, #fff);
+  opacity: calc(var(--theme-title-opacity, 0.45) * 0.85);
+  margin-bottom: 0.75em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: var(--theme-text-transform, none);
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.lyric-stage-line {
+  font-family: var(--theme-phrase-font, var(--theme-font));
+  font-size: var(--theme-lyric-size, 5vw);
+  color: var(--theme-lyric-color, #fff);
+  text-shadow: var(--theme-shadow);
+  margin: 0.12em 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-transform: var(--theme-text-transform, none);
+  /* Cada <p> é uma linha do slide — não quebra no meio se ainda cabe */
+  white-space: nowrap;
+}
+
+.lyric-stage.wrap-lines .lyric-stage-line,
+.lyric-stage-line.is-wrapping {
+  inline-size: 100%;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+  text-align: var(--theme-align, center);
+}
+
+.lyric-stage.wrap-lines .lyric-stage-title,
+.lyric-stage.wrap-lines .lyric-stage-artist {
+  white-space: normal;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+/* ─── Até 3 frases em composição artística ─── */
+.lyric-stage-slots {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  box-sizing: border-box;
+  padding: 0;
+  pointer-events: none;
+  text-align: var(--theme-align, center);
+  font-weight: var(--theme-weight, 650);
+  letter-spacing: var(--theme-tracking, 0.02em);
+  line-height: var(--theme-leading, 1.2);
+}
+
+.lyric-stage-slots.on-camera {
+  background: transparent;
+}
+
+/* Alvos progressivos e blocos tipográficos. */
+.artistic-phrase {
+  position: absolute;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+  pointer-events: none;
+  color: var(--theme-lyric-color, #fff);
+  font-family: var(--theme-phrase-font, var(--theme-font, system-ui, sans-serif));
+  font-weight: var(--theme-weight, 650);
+  letter-spacing: var(--theme-tracking, 0.02em);
+  line-height: 1.02;
+  text-shadow: var(--theme-shadow);
+  text-transform: var(--theme-text-transform, none);
+  /* Sem transition aqui: o fit precisa aplicar --art-fit-* de imediato.
+     Só reflow (growing/shrinking) anima geometria. */
+}
+
+.artistic-phrase.is-growing,
+.artistic-phrase.is-shrinking,
+.artistic-phrase.is-pivoting,
+.artistic-phrase.is-settling {
+  transition:
+    left var(--art-motion-ms, 720ms) var(--art-reflow-ease, cubic-bezier(0.22, 0.8, 0.24, 1)),
+    top var(--art-motion-ms, 720ms) var(--art-reflow-ease, cubic-bezier(0.22, 0.8, 0.24, 1)),
+    width var(--art-motion-ms, 720ms) var(--art-reflow-ease, cubic-bezier(0.22, 0.8, 0.24, 1)),
+    height var(--art-motion-ms, 720ms) var(--art-reflow-ease, cubic-bezier(0.22, 0.8, 0.24, 1)),
+    font-size var(--art-motion-ms, 720ms) var(--art-reflow-ease, cubic-bezier(0.22, 0.8, 0.24, 1)),
+    opacity var(--art-motion-ms, 720ms) var(--art-reflow-ease, cubic-bezier(0.22, 0.8, 0.24, 1)),
+    filter var(--art-motion-ms, 720ms) var(--art-reflow-ease, cubic-bezier(0.22, 0.8, 0.24, 1)),
+    transform var(--art-motion-ms, 720ms) var(--art-reflow-ease, cubic-bezier(0.22, 0.8, 0.24, 1));
+}
+
+.artistic-phrase.is-growing {
+  /* Sem overshoot: overshoot + fit final = engasgo / salto. */
+  --art-reflow-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+
+.artistic-phrase.is-shrinking {
+  --art-reflow-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.artistic-phrase.is-pivoting {
+  transform-origin: var(--art-pivot-origin, 50% 100%);
+}
+
+.artistic-phrase.is-settling {
+  --art-motion-ms: 380ms;
+  --art-reflow-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+
+/* Reflow: nunca re-dispara a animação de entrada — só geometria. */
+.artistic-phrase.is-growing .artistic-phrase-motion,
+.artistic-phrase.is-shrinking .artistic-phrase-motion,
+.artistic-phrase.is-pivoting .artistic-phrase-motion {
+  animation: none !important;
+}
+
+/* Evita corte abrupto: ao virar shown, mantém o último frame do enter. */
+.artistic-phrase.is-shown > .artistic-phrase-motion[class*="artistic-enter-"],
+.artistic-phrase.is-shown > .artistic-phrase-motion.artistic-enter {
+  animation: none;
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.artistic-phrase.is-measuring {
+  opacity: 0 !important;
+  transition: none;
+}
+
+.artistic-phrase-motion,
+.artistic-blocks {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  overflow: visible;
+}
+
+.artistic-phrase-motion {
+  display: flex;
+  align-items: center;
+}
+
+.artistic-blocks {
+  display: flex;
+  flex-flow: row wrap;
+  align-content: center;
+  align-items: baseline;
+  justify-content: var(--art-justify, center);
+  gap: 0.08em 0.18em;
+  /* Scale visual (não font-size): preserva a quebra flex entre herói e apoio. */
+  font-size: 1em;
+  transform: scale(var(--art-font-scale, 1));
+  transform-origin: var(--art-scale-origin, center center);
+  line-height: 0.96;
+}
+
+.artistic-block {
+  display: inline-block;
+  flex: 0 0 auto;
+  color: var(--art-block-color, var(--theme-lyric-color, #fff));
+  font-family: var(--art-block-font-family, inherit);
+  font-size: calc(1em * var(--art-block-scale, 1));
+  font-weight: var(--art-block-weight, var(--theme-weight, 650));
+  line-height: 0.96;
+  white-space: nowrap;
+  text-wrap: nowrap;
+  opacity: 0.94;
+}
+
+.artistic-block.is-keyword,
+.artistic-word.is-keyword {
+  color: var(--art-keyword-color, var(--theme-title-color, #ffe08a));
+  font-weight: 900;
+}
+
+/* Força fileira nova no flex — ritmo de quebra independente da largura. */
+.artistic-flex-break {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.artistic-block.is-line,
+.artistic-block.is-keyword {
+  /* Keyword (e fullLine raro): linha própria. Demais blocos quebram no wrap. */
+  display: block;
+  flex: 0 0 100%;
+  min-width: 100%;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: inherit;
+}
+
+.artistic-block.is-keyword {
+  opacity: 1;
+  filter: saturate(1.22) contrast(1.08);
+  letter-spacing: 0.02em;
+  line-height: 1.02;
+  margin-block: 0.06em;
+  /* Garante que a escala da keyword (≈2×) continue legível no cartaz. */
+  font-size: calc(1em * var(--art-block-scale, 1));
+  text-shadow:
+    0 0.04em 0.12em rgba(0, 0, 0, 0.45),
+    0 0 0.35em color-mix(in srgb, var(--art-keyword-color, var(--theme-title-color, #ffe08a)) 35%, transparent);
+}
+
+.artistic-phrase.is-hero {
+  filter: none;
+}
+
+.artistic-phrase:not(.is-hero):not(.is-measuring) {
+  filter: saturate(0.88) brightness(0.92);
+}
+
+.artistic-phrase.is-stamp .artistic-blocks {
+  align-content: center;
+}
+
+/*
+ * Coluna-retrato = só a REGIÃO (caixa alta/estreita). O layout interno do
+ * cartaz (quebras / linhas) permanece o mesmo de herói e apoio — não empilha
+ * palavras nem gira linhas (o flex 100% + column gerava “cruz” na 1ª linha).
+ */
+.artistic-phrase.is-portrait-stack .artistic-blocks {
+  /* Mantém o fluxo landscape do cartaz; só aperta o gap na caixa estreita. */
+  gap: 0.06em 0.12em;
+}
+
+.artistic-phrase-motion[class*="artistic-enter-"],
+.artistic-phrase-motion.artistic-enter {
+  animation-duration: var(--art-motion-ms, 720ms);
+  animation-delay: var(--art-enter-delay, 0ms);
+  animation-fill-mode: both;
+}
+
+.artistic-enter-stamp {
+  --art-enter-name: artistic-enter-stamp;
+  --art-enter-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  animation-name: artistic-enter-stamp;
+  animation-timing-function: cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+.artistic-enter-slam {
+  --art-enter-name: artistic-enter-slam;
+  --art-enter-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  animation-name: artistic-enter-slam;
+  animation-timing-function: cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+.artistic-enter-punch {
+  --art-enter-name: artistic-enter-punch;
+  --art-enter-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  animation-name: artistic-enter-punch;
+  animation-timing-function: cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+.artistic-enter-fade {
+  --art-enter-name: artistic-enter-fade;
+  --art-enter-ease: ease-out;
+  animation-name: artistic-enter-fade;
+  animation-timing-function: ease-out;
+}
+.artistic-enter-slide-up {
+  --art-enter-name: artistic-enter-slide-up;
+  --art-enter-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  animation-name: artistic-enter-slide-up;
+  animation-timing-function: cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+.artistic-enter-slide-left {
+  --art-enter-name: artistic-enter-slide-left;
+  --art-enter-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  animation-name: artistic-enter-slide-left;
+  animation-timing-function: cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+.artistic-enter-slide-right {
+  --art-enter-name: artistic-enter-slide-right;
+  --art-enter-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  animation-name: artistic-enter-slide-right;
+  animation-timing-function: cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+.artistic-enter-zoom-in {
+  --art-enter-name: artistic-enter-zoom-in;
+  --art-enter-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  animation-name: artistic-enter-zoom-in;
+  animation-timing-function: cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+.artistic-enter-soft-rise,
+.artistic-enter {
+  --art-enter-name: artistic-enter-soft-rise;
+  --art-enter-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  animation-name: artistic-enter-soft-rise;
+  animation-timing-function: cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+
+/* Depois das classes de enter: acrescenta blinker no pouso. */
+.artistic-phrase-motion.has-land-blink[class*="artistic-enter-"] {
+  animation-name: var(--art-enter-name, artistic-enter-soft-rise),
+    artistic-land-blink;
+  animation-duration: var(--art-motion-ms, 720ms), 320ms;
+  animation-delay: var(--art-enter-delay, 0ms),
+    calc(var(--art-enter-delay, 0ms) + var(--art-motion-ms, 720ms) * 0.82);
+  animation-timing-function: var(--art-enter-ease, ease-out),
+    cubic-bezier(0.2, 0.9, 0.3, 1);
+  animation-fill-mode: both, both;
+}
+
+.artistic-block[class*="artistic-exit-"] {
+  animation-duration: var(--art-motion-ms, 720ms);
+  animation-delay: var(--art-exit-delay, 0ms);
+  animation-timing-function: cubic-bezier(0.4, 0, 0.7, 0.2);
+  animation-fill-mode: both;
+}
+
+.artistic-exit-fade { animation-name: artistic-exit-fade; }
+.artistic-exit-left { animation-name: artistic-exit-left; }
+.artistic-exit-right { animation-name: artistic-exit-right; }
+.artistic-exit-up { animation-name: artistic-exit-up; }
+.artistic-exit-down { animation-name: artistic-exit-down; }
+.artistic-exit-zoom { animation-name: artistic-exit-zoom; }
+
+/* Fit em invisível: ocupa layout, não aparece até o tamanho estar pronto */
+.lyric-stage-copy.is-measuring {
+  opacity: 0 !important;
+  animation: none !important;
+  pointer-events: none;
+}
+
+.lyric-stage-copy.is-exiting {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  /* Isola variáveis CSS do tema novo no stage pai */
+  isolation: isolate;
+}
+
+.lyric-stage-lyrics-cell .lyric-slide-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% + var(--theme-phrase-y, 0%));
+  bottom: auto;
+  z-index: 2;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.lyric-slide-layer.is-entering,
+.lyric-slide-layer.is-shown {
+  z-index: 2;
+}
+
+.lyric-slide-layer.is-exiting {
+  z-index: 3;
+}
+
+.lyric-slide-layer.is-measuring {
+  z-index: 1;
+}
+
+.artistic-phrase-layer {
+  isolation: isolate;
+}
+
+.artistic-phrase-layer.is-entering,
+.artistic-phrase-layer.is-shown {
+  z-index: 2;
+}
+
+.artistic-phrase-layer.is-exiting {
+  z-index: 5;
+}
+
+/* Troca de trio: desvanece o mosaico inteiro antes do novo entrar. */
+.artistic-phrase.is-sequence-exit {
+  animation: artistic-sequence-exit var(--art-motion-ms, 720ms) ease both;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes artistic-sequence-exit {
+  from {
+    opacity: var(--art-exit-from-opacity, 1);
+    filter: none;
+  }
+  to {
+    opacity: 0;
+    filter: brightness(0.85) saturate(0.8);
+  }
+}
+
+.artistic-phrase-layer.is-measuring {
+  z-index: 1;
+}
+
+.anim-fade {
+  animation: lyric-fade var(--theme-anim-ms, 350ms) ease both;
+}
+
+.anim-slide-up {
+  animation: lyric-slide-up var(--theme-anim-ms, 350ms) ease both;
+}
+
+.anim-slide-down {
+  animation: lyric-slide-down var(--theme-anim-ms, 350ms) ease both;
+}
+
+.anim-slide-left {
+  animation: lyric-slide-left var(--theme-anim-ms, 350ms) ease both;
+}
+
+.anim-slide-right {
+  animation: lyric-slide-right var(--theme-anim-ms, 350ms) ease both;
+}
+
+.anim-zoom-in {
+  animation: lyric-zoom-in var(--theme-anim-ms, 350ms) ease both;
+}
+
+.anim-zoom-out {
+  animation: lyric-zoom-out var(--theme-anim-ms, 350ms) ease both;
+}
+
+/* Saída — continua o movimento de entrada (ou fade) */
+.anim-fade-out {
+  animation: lyric-fade-out var(--theme-anim-ms, 350ms) ease both;
+}
+
+.anim-slide-up-out {
+  animation: lyric-slide-up-out var(--theme-anim-ms, 350ms) ease both;
+}
+
+.anim-slide-down-out {
+  animation: lyric-slide-down-out var(--theme-anim-ms, 350ms) ease both;
+}
+
+.anim-slide-left-out {
+  animation: lyric-slide-left-out var(--theme-anim-ms, 350ms) ease both;
+}
+
+.anim-slide-right-out {
+  animation: lyric-slide-right-out var(--theme-anim-ms, 350ms) ease both;
+}
+
+.anim-zoom-in-out {
+  animation: lyric-zoom-in-out var(--theme-anim-ms, 350ms) ease both;
+}
+
+.anim-zoom-out-out {
+  animation: lyric-zoom-out-out var(--theme-anim-ms, 350ms) ease both;
+}
+
+@keyframes lyric-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lyric-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes lyric-slide-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes lyric-slide-up-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-18px); }
+}
+
+@keyframes lyric-slide-down {
+  from { opacity: 0; transform: translateY(-18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes lyric-slide-down-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(18px); }
+}
+
+@keyframes lyric-slide-left {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes lyric-slide-left-out {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-24px); }
+}
+
+@keyframes lyric-slide-right {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes lyric-slide-right-out {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(24px); }
+}
+
+@keyframes lyric-zoom-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes lyric-zoom-in-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.08); }
+}
+
+@keyframes lyric-zoom-out {
+  from { opacity: 0; transform: scale(1.08); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes lyric-zoom-out-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.92); }
+}
+
+@keyframes artistic-enter-stamp {
+  0% {
+    opacity: 0;
+    transform: scale(0.94) rotate(var(--art-enter-rotation, -2.5deg));
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes artistic-enter-slam {
+  0% { opacity: 0; transform: translateY(-0.18em) scale(0.97); }
+  70% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes artistic-enter-punch {
+  0% { opacity: 0; transform: scale(0.9); }
+  70% { opacity: 1; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes artistic-enter-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes artistic-enter-slide-up {
+  from { opacity: 0; transform: translateY(0.35em); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes artistic-enter-slide-left {
+  from { opacity: 0; transform: translateX(0.4em); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes artistic-enter-slide-right {
+  from { opacity: 0; transform: translateX(-0.4em); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes artistic-enter-zoom-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes artistic-enter-soft-rise {
+  from { opacity: 0; transform: translateY(0.28em) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Blinker no pouso: flash rápido quando a frase chega. */
+@keyframes artistic-land-blink {
+  0% { filter: brightness(1); opacity: 1; }
+  35% { filter: brightness(1.55); opacity: 1; }
+  55% { filter: brightness(0.72); opacity: 0.88; }
+  75% { filter: brightness(1.28); opacity: 1; }
+  100% { filter: brightness(1); opacity: 1; }
+}
+
+@keyframes artistic-exit-fade {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes artistic-exit-left {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-1.1em); }
+}
+
+@keyframes artistic-exit-right {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(1.1em); }
+}
+
+@keyframes artistic-exit-up {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-0.8em); }
+}
+
+@keyframes artistic-exit-down {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(0.8em); }
+}
+
+@keyframes artistic-exit-zoom {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.15); }
+}

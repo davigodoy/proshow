@@ -1,0 +1,28 @@
+.web-desk-crop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #05070a;
+  z-index: 0;
+}
+
+.web-desk-crop-frame {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex;
+  border: 0;
+  background: #000;
+  pointer-events: none;
+}
+
+.web-desk-crop-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #8b95a5;
+  font-size: 0.85rem;
+  font-weight: 600;
+}

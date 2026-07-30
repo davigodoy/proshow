@@ -1,0 +1,41 @@
+.out {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background: #000;
+  overflow: hidden;
+  user-select: none;
+  cursor: none;
+}
+
+/**
+ * Máscara da saída: limite físico da projeção. O que passa daqui é cortado —
+ * inclusive fundo, vídeo e câmera, que não respeitam a área de texto.
+ *
+ * A geometria vem por `clip-path`, não por caixa: o retângulo das margens é só
+ * o primeiro formato. Polígono, elipse ou recorte de projeção mapeada entram
+ * como outro valor da mesma variável, sem mexer no layout de nada.
+ */
+.out-mask {
+  position: absolute;
+  inset: 0;
+  clip-path: var(--out-mask, none);
+}
+
+.out .lyric-stage {
+  min-height: 100%;
+}
+
+.out .camera-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c9a0a0;
+  background: #000;
+  z-index: 1;
+  padding: 2rem;
+  text-align: center;
+}
