@@ -1,0 +1,156 @@
+/* Coluna no meio do plan-heading: [Auto+mic] / status discreto abaixo */
+.auto-advance-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.28rem;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 14rem;
+  margin-left: auto;
+  margin-right: 0.35rem;
+}
+
+.auto-advance-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.auto-advance-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  flex: 0 0 auto;
+  font-size: 0.68rem;
+  color: #c5d0de;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.auto-advance-toggle input {
+  accent-color: #3d6aad;
+}
+
+.auto-advance-controls.is-on .auto-advance-toggle strong {
+  color: #9ec1ff;
+}
+
+.auto-advance-select {
+  flex: 0 0 7.5rem;
+  width: 7.5rem;
+  max-width: 7.5rem;
+  background: #0a0d12;
+  border: 1px solid #2a3340;
+  color: #d5dae2;
+  border-radius: 6px;
+  padding: 0.22rem 0.3rem;
+  font-size: 0.62rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.auto-advance-select:disabled {
+  opacity: 0.4;
+}
+
+.auto-advance-channel-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.auto-advance-channel-toggle {
+  width: 1.45rem;
+  height: 1.45rem;
+  border: 1px solid #2a3340;
+  background: #151a22;
+  color: #9aa4b2;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+.auto-advance-channel-toggle:hover:not(:disabled) {
+  border-color: #4a6284;
+  color: #d5dae2;
+}
+
+.auto-advance-channel-toggle:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.auto-advance-channel-list {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  right: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 8rem;
+  max-height: 11rem;
+  overflow: auto;
+  padding: 0.28rem;
+  border: 1px solid #2a3340;
+  border-radius: 8px;
+  background: #151a22;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.45);
+}
+
+.auto-advance-channel-list button {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: #9aa4b2;
+  border-radius: 5px;
+  padding: 0.28rem 0.4rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.auto-advance-channel-list button:hover {
+  background: rgba(61, 106, 173, 0.18);
+  color: #e8ecf2;
+}
+
+.auto-advance-channel-list button.on {
+  color: #9ec1ff;
+  font-weight: 600;
+}
+
+/* Status em fluxo (não absoluto) — cabe na coluna sem vazar pro plano */
+.auto-advance-status {
+  display: block;
+  min-height: 0.55rem;
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  color: #6a7585;
+  font-size: 0.48rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auto-advance-controls.is-on .auto-advance-status {
+  color: #7a8fa8;
+}
+
+.auto-advance-controls.is-on .auto-advance-status.is-bad {
+  color: #c88888;
+}
+
+.plan-heading.operator-panel-heading {
+  align-items: flex-start;
+  overflow: hidden;
+}

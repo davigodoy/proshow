@@ -1,0 +1,33 @@
+.deck-scroll-crop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #05070a;
+  z-index: 0;
+  /* Não herdar object-fit de .lyric-stage-media */
+  object-fit: unset;
+}
+
+.deck-scroll-crop-strip {
+  width: 100%;
+  will-change: transform;
+}
+
+.deck-scroll-crop-page {
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: top;
+  background: #05070a;
+  object-fit: fill;
+}
+
+.deck-scroll-crop-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #8b95a5;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
